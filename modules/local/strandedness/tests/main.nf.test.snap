@@ -1,0 +1,25 @@
+{
+    "sarscov2 - bed - bam": {
+        "content": [
+            {
+                "0": [
+                    "infer.csv:md5,ee618e561d549c73c4060b444280cdc8"
+                ],
+                "1": [
+                    "versions.yml:md5,f98f244602bbc5c900aceccfa38a03d6"
+                ],
+                "infer": [
+                    "infer.csv:md5,ee618e561d549c73c4060b444280cdc8"
+                ],
+                "versions": [
+                    "versions.yml:md5,f98f244602bbc5c900aceccfa38a03d6"
+                ]
+            }
+        ],
+        "timestamp": "2026-09-20T14:01:03.39697",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}

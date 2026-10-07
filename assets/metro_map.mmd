@@ -1,0 +1,141 @@
+%%metro title: Pira Pipeline
+%%metro stroke_scale: 1
+%%metro font_scale: 0.9
+%%metro compact_offsets: true
+%%metro diamond_style: straight
+%%metro line_spread: bundle
+%%metro logo: docs/images/nf-core-pira_logo_light.png
+%%metro mode: light
+%%metro style: seqera
+%%line
+%%metro line: main | Baseline | #2db572
+%%metro line: optional | Optional input | #aaaaaa
+%%metro line: denovo_align | de novo: STAR 2-pass | #3D95FD
+%%metro line: denovo_trans | de novo: StringTie transcript assembly | #e7da46
+%%metro line: denovo_splic | de novo: rMATS with --novelSS | #F18046
+%%file
+%%metro file: IN_SAMPLES | CSV | Samples | banner
+%%metro file: IN_FASTQ   | FASTQ | | banner
+%%metro file: IN_FASTA   | FASTA | | banner
+%%metro file: IN_GTF     | GTF   | | banner
+%%metro dir:  IN_INDEX   | INDEX
+%%file
+%%metro dir:  OUT_INDEX   | INDEX
+%%metro file: OUT_BAM     | BAM | | banner
+%%metro file: OUT_BED     | BED | | banner
+%%metro file: OUT_MULTIQC | HTML | MultiQC | banner
+
+graph LR
+
+    subgraph id0 [Genome preprocessing]
+    	%%metro direction: LR
+ 		%%metro exit: right | main, optional
+        %%nodes
+      	IN_FASTA
+      	IN_GTF
+      	IN_INDEX
+        OUT_BED
+        ID0_STAR([STAR genome index])
+        ID0_BED([UCSC Kent Utils])
+     	%%graph
+  		IN_GTF -->|main|ID0_STAR
+      	IN_FASTA-->|main|ID0_STAR
+      	IN_INDEX-->|optional|OUT_INDEX
+      	ID0_STAR -->|main|OUT_INDEX
+        IN_GTF-->|main|ID0_BED
+        ID0_BED-->|main|OUT_BED
+    end
+
+    subgraph id1id2 [RNA-seq preprocessing]
+    	%%metro direction: LR
+    	%%metro exit: right | main, optional
+        %%nodes
+        IN_SAMPLES
+    	IN_FASTQ
+        ID1_SRA([SRA Toolkit])
+        ID2_FASTP([fastp])
+        %%graph
+        IN_SAMPLES -->|main| ID1_SRA
+      	ID1_SRA -->|main| ID2_FASTP
+    	IN_FASTQ -->|optional| ID2_FASTP
+    end
+
+    subgraph id3 [Alignment]
+    	%%metro direction: LR
+        %%metro entry: left | main
+    	%%metro exit: right | main
+    	%%nodes
+        OUT_BAM
+    	ID3_STAR([STAR])
+    	ID3_STAR_DENOVO([STAR 2-pass])
+        BRANCH_ID30([])
+        _BRANCH_ID31([])
+        %%graph
+        ID3_STAR-->|main|_BRANCH_ID31
+    	ID3_STAR-->|denovo_align|ID3_STAR_DENOVO
+        _BRANCH_ID31-->|main|BRANCH_ID30
+        ID3_STAR_DENOVO-->|denovo_align|BRANCH_ID30
+        BRANCH_ID30-->|main|OUT_BAM
+    end
+
+    subgraph id4id5 [Quality control]
+        %%metro entry: left | main
+        %%metro exit: bottom | main
+    	%%nodes
+        BRANCH_ID40([])
+        BRANCH_ID41([])
+    	ID4_SAMTOOLS([SAMtools])
+    	ID5_RSEQC([RSeQC])
+        %%graph
+        BRANCH_ID40-->|main|ID4_SAMTOOLS
+        ID4_SAMTOOLS-->|main|BRANCH_ID41
+        BRANCH_ID40-->|main|ID5_RSEQC
+        ID5_RSEQC-->|main|BRANCH_ID41
+    end
+
+    subgraph id6 [Transcript assembly]
+    	%%metro direction: RL
+        %%metro entry: top | main
+        %%metro exit: left | main
+        %%metro grid: id6 | 2,1
+        %%nodes
+    	ID6_STRINGTIE([StringTie])
+        BRANCH_ID60([])
+        _BRANCH_ID61([])
+        BRANCH_ID62([])
+        %%graph
+        BRANCH_ID60-->|main|_BRANCH_ID61
+        _BRANCH_ID61-->|main|BRANCH_ID62
+    	BRANCH_ID60-->|denovo_trans|ID6_STRINGTIE
+        ID6_STRINGTIE-->|denovo_trans|BRANCH_ID62
+    end
+
+    subgraph id7 [Alternative splicing quantification]
+		%%metro direction: RL
+        %%metro entry: right | main
+        %%metro exit: left | main
+		%%metro grid: id7 | 1,1
+		%%nodes
+        OUT_MULTIQC
+    	ID7_RMATS([rMATS-turbo])
+    	ID7_RMATS_DENOVO([rMATS-turbo --novelSS])
+        BRANCH_ID71([])
+        BRANCH_ID70([])
+        %%graph
+      	BRANCH_ID71-->|main|ID7_RMATS
+      	BRANCH_ID71-->|denovo_splic|ID7_RMATS_DENOVO
+      	ID7_RMATS-->|main|BRANCH_ID70
+      	ID7_RMATS_DENOVO-->|denovo_splic|BRANCH_ID70
+        BRANCH_ID70-->|main|OUT_MULTIQC
+	end
+
+    %%1->3
+    OUT_INDEX -->|main|ID3_STAR
+    %%2->3
+    ID2_FASTP-->|main|ID3_STAR
+    %%3->4
+    OUT_BAM-->|main| BRANCH_ID40
+    %%4->5
+    BRANCH_ID41-->|main|BRANCH_ID60
+    %%5->6
+    BRANCH_ID62-->|main|BRANCH_ID71

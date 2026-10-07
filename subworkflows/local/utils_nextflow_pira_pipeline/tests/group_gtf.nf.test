@@ -1,0 +1,31 @@
+nextflow_workflow {
+
+    name "Test Workflow group_gtf adapter"
+    script "subworkflows/local/utils_nextflow_pira_pipeline/tests/group_gtf.nf"
+    workflow "TEST_GROUP_GTF"
+
+    test("group_gtf") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [ gtf: 'gtf-1' ],
+                    [ gtf: 'gtf-2' ],
+                    [ gtf: 'gtf-3' ],
+                    [ gtf: 'gtf-4' ],
+                    [ gtf: 'gtf-5' ],
+                    [ gtf: 'gtf-6' ]
+                )
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}

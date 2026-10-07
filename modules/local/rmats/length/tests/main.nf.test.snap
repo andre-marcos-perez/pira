@@ -1,0 +1,67 @@
+{
+    "local - stats": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "condition"
+                        },
+                        "100"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "condition"
+                        },
+                        "condition.stats.csv:md5,37eb2d1d5d7e98d3f07f50de5d51517e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "condition"
+                        },
+                        "condition.merged.stats:md5,b422cf77c168cb9ad06a0bedff24976d"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,e3a460bb48a8f31d432a6c3274a362af"
+                ],
+                "average": [
+                    [
+                        {
+                            "id": "condition"
+                        },
+                        "condition.stats.csv:md5,37eb2d1d5d7e98d3f07f50de5d51517e"
+                    ]
+                ],
+                "merged": [
+                    [
+                        {
+                            "id": "condition"
+                        },
+                        "condition.merged.stats:md5,b422cf77c168cb9ad06a0bedff24976d"
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "condition"
+                        },
+                        "100"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e3a460bb48a8f31d432a6c3274a362af"
+                ]
+            }
+        ],
+        "timestamp": "2026-09-20T14:00:07.066868",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}
