@@ -1,0 +1,29 @@
+nextflow_workflow {
+
+    name "Test Workflow group_fastp_by_exp_cond_end - single end true"
+    script "./group_fastp_by_exp_cond_end_true.nf"
+    workflow "TEST_GROUP_FASTP_BY_EXP_COND_END_TRUE"
+
+    test("group_fastp_by_exp_cond_end - single end true") {
+
+        when {
+            workflow {
+                """
+                input[0] = channel.of(
+                    [ experiment: 'exp-1', condition: 'cond-1', single_end: true, fastp: 'fastp-1' ],
+                    [ experiment: 'exp-1', condition: 'cond-1', single_end: true, fastp: 'fastp-2' ],
+                    [ experiment: 'exp-2', condition: 'cond-2', single_end: true, fastp: 'fastp-3' ],
+                    [ experiment: 'exp-2', condition: 'cond-2', single_end: true, fastp: 'fastp-4' ]
+                )
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}

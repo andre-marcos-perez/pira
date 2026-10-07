@@ -1,0 +1,29 @@
+nextflow_workflow {
+
+    name "Test Workflow group_spl_by_alignment"
+    script "subworkflows/local/utils_nextflow_pira_pipeline/tests/group_spl_by_alignment.nf"
+    workflow "TEST_GROUP_SPL_BY_ALIGNMENT"
+
+    test("group_spl_by_alignment") {
+
+        when {
+            workflow {
+                """
+                input[0] = channel.of(
+                    [ alignment: 'align-1', spl: 'spl-1' ],
+                    [ alignment: 'align-1', spl: 'spl-2' ],
+                    [ alignment: 'align-2', spl: 'spl-3' ],
+                    [ alignment: 'align-2', spl: 'spl-4' ]
+                )
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}

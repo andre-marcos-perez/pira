@@ -1,0 +1,2 @@
+nextflow==26.4.6
+nf-core==4.1.0

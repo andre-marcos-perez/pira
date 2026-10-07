@@ -15,7 +15,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { PIRA  } from './workflows/pira'
+include { PIRA                    } from './workflows/pira'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_pira_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_pira_pipeline'
 /*
@@ -34,18 +34,47 @@ workflow NFCORE_PIRA {
 
     main:
 
+    ch_index_optional = channel.empty()
+    ch_samples = channel.empty()
+    ch_fasta = channel.empty()
+    ch_gtf = channel.empty()
+
+    samplesheet.set { ch_samples }
+
+    channel
+        .fromPath(params.fasta, type: "file")
+        .map { it -> [fasta: it]}
+        .set { ch_fasta }
+
+    channel
+        .fromPath(params.gtf, type: "file")
+        .map { it -> [gtf: it]}
+        .set { ch_gtf }
+
+    def with_index = !(params.index == null || params.index.trim() == "")
+    if (with_index) {
+        channel
+            .fromPath(params.index, type: "dir")
+            .map { it -> [index: it]}
+            .set { ch_index_optional }
+    }
+
     //
     // WORKFLOW: Run pipeline
     //
     PIRA (
-        samplesheet,
+        ch_samples,
+        ch_fasta,
+        ch_gtf,
+        ch_index_optional,
         params.multiqc_config,
         params.multiqc_logo,
         params.multiqc_methods_description,
-        params.outdir,
     )
+
     emit:
-    multiqc_report = PIRA.out.multiqc_report // channel: /path/to/multiqc_report.html
+    versions = PIRA.out.versions
+    multiqc_report = PIRA.out.multiqc_report
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -70,7 +99,6 @@ workflow {
         params.help_full,
         params.show_hidden
     )
-
     //
     // WORKFLOW: Run main workflow
     //

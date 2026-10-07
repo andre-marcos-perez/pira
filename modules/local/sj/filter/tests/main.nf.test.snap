@@ -1,0 +1,35 @@
+{
+    "local - tab": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "minimal"
+                        },
+                        "minimal.SJ.out.filter.tab:md5,c50ebfc1be7871890d643a7a81d1f5f1"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,df85e02ccc5e5b0b50c9cdfd937ab1a9"
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "minimal"
+                        },
+                        "minimal.SJ.out.filter.tab:md5,c50ebfc1be7871890d643a7a81d1f5f1"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,df85e02ccc5e5b0b50c9cdfd937ab1a9"
+                ]
+            }
+        ],
+        "timestamp": "2026-09-20T14:00:46.664243",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}

@@ -1,0 +1,29 @@
+nextflow_process {
+
+    name "Test Process SJ_FILTER"
+    script "../main.nf"
+    process "SJ_FILTER"
+
+    test("local - tab") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id: 'minimal' ],
+                    [
+                        file('${projectDir}/assets/data/minimal.one.SJ.out.tab', checkIfExists: true),
+                        file('${projectDir}/assets/data/minimal.two.SJ.out.tab', checkIfExists: true)
+                    ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+}
