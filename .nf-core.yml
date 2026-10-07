@@ -5,7 +5,7 @@ nf_core_version: 4.1.0
 lint:
   container_configs: False
   files_exist:
-    - tests/default.nf.test 
+    - tests/default.nf.test
     - conf/igenomes.config
     - conf/igenomes_ignored.config
 
