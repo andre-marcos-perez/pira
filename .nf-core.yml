@@ -8,6 +8,8 @@ lint:
     - tests/default.nf.test
     - conf/igenomes.config
     - conf/igenomes_ignored.config
+  files_unchanged:
+    - .github/workflows/branch.yml
 
 template:
   org: nf-core
