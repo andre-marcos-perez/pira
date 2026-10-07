@@ -10,6 +10,7 @@ lint:
     - conf/igenomes_ignored.config
   files_unchanged:
     - .github/workflows/branch.yml
+    - assets/nf-core-pira_logo_light.png
 
 template:
   org: nf-core
